@@ -6,7 +6,7 @@ class BodyWidget extends StatefulWidget {
   final Function(Size) onRendered;
   final Widget body;
 
-  BodyWidget({@required this.onRendered, @required this.body, Key key})
+  BodyWidget({required this.onRendered, required this.body, Key? key})
       : super(key: key);
 
   @override
@@ -16,7 +16,7 @@ class BodyWidget extends StatefulWidget {
 class _BodyWidgetState extends State<BodyWidget> {
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
+    WidgetsBinding.instance!.addPostFrameCallback(_afterLayout);
     super.initState();
   }
 
@@ -35,68 +35,59 @@ enum Appearance { top, bottom }
 
 class NotificationBanner {
   final BuildContext context;
-  Widget _body;
-  VoidCallback _onTapped;
+  Widget? _body;
+  VoidCallback? _onTapped;
   double _padding = 40;
   Duration _timeout = Duration(seconds: 3);
   Duration _transitionDuration = Duration(milliseconds: 200);
   double _shadowOpacity = 0.01;
   bool _keepAlive = false;
   Color _bgColor = Color.fromRGBO(44, 52, 67, 1);
-  String _message;
-  TextStyle _textStyle;
+  String? _message;
+  TextStyle? _textStyle;
   double _borderRadius = 6.0;
 
   NotificationBanner(this.context);
 
   void setMessage(String message) {
-    assert(message.isNotEmpty, 'Message can\'t be null or empty');
+    assert(message.isNotEmpty, 'Message can\'t be empty');
     _message = message;
   }
 
   void setBody(Widget body) {
-    assert(body != null, 'Body can\'t be null');
     _body = body;
   }
 
   void setTapCallback(VoidCallback onTapped) {
-    assert(onTapped != null, 'Callback can\'t be null');
     _onTapped = onTapped;
   }
 
   /// Padding between edge of screen and banner
   void setPadding(double padding) {
-    assert(padding != null, 'Padding can\'t be null');
     _padding = padding;
   }
 
   void setTimeout(Duration timeout) {
-    assert(timeout != null, 'Timeout can\'t be null');
     _timeout = timeout;
   }
 
   void setTransitionDuration(Duration transition) {
-    assert(transition != null, 'Transition can\'t be null');
     _transitionDuration = transition;
   }
 
   void setShadowOpacity(double opacity) {
-    assert(opacity != null, 'Opacity can\'t be null');
     _shadowOpacity = opacity;
   }
 
   void setBgColor(Color color) {
-    assert(color != null, 'Color can\'t be null');
     _bgColor = color;
   }
 
   void setTextStyle(TextStyle textStyle) {
-    assert(textStyle != null, 'TextStyle can\'t be null');
     _textStyle = textStyle;
   }
 
   void setBorderRadius(double radius) {
-    assert(radius != null, 'Radius can\'t be null');
     _borderRadius = radius;
   }
 
@@ -105,9 +96,6 @@ class NotificationBanner {
   }
 
   void show(Appearance appearance) {
-    assert(
-        appearance != null, 'You need to clarify where the banner will appear');
-
     Size _size = Size.zero;
     var halfOfScreenHeight = MediaQuery.of(context).size.height * 0.5;
     bool hasBeenShown = false;
@@ -148,21 +136,20 @@ class NotificationBanner {
                           child: GestureDetector(
                               onTap: () {
                                 if (_onTapped != null) {
-                                  _onTapped();
+                                  _onTapped!();
                                 }
                               },
                               child: BodyWidget(
-                                body: _body != null
-                                    ? _body
+                                body: _body ??
                                     // default body for the notification
-                                    : SizedBox(
+                                    SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.9,
                                         child: Padding(
                                           padding: EdgeInsets.all(16.0),
                                           child: Text(
-                                            _message,
+                                            _message ?? "",
                                             style: _textStyle != null
                                                 ? _textStyle
                                                 : TextStyle(
@@ -184,8 +171,8 @@ class NotificationBanner {
         barrierDismissible: true,
         barrierLabel: '',
         context: context,
-        pageBuilder: (context3, animation1, animation2) {
-          return null;
+        pageBuilder: (context, animation1, animation2) {
+          return Container();
         });
   }
 }
